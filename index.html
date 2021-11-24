@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div><img src="Screenshot_1.png" width="auto" height="200%"></div>
+    <div>Выводит в консоле ответ, 
+        массив изменять в коде</div>
+    
+
+
+
+
+
+    <script>
+
+function getMaxOfArray(numArray) {
+            return Math.max.apply(null, numArray);
+        }
+        function getMinOfArray(numArray) {
+            return Math.min.apply(null, numArray);
+        }
+        function findLeftHigherV(indexMinHeigth, heights, leftHigherV) {
+            let lengthToLH = 0;
+            for (let l = indexMinHeigth - 1; l >= 0; l--) {
+                if (heights[l] > heights[indexMinHeigth])
+                    leftHigherV = heights[l];
+                if (indexMinHeigth - l > 0)
+                    lengthToLH = indexMinHeigth - l
+                break;
+            }
+            return [leftHigherV, lengthToLH]
+        }
+
+        function findRightHigherV(indexMinHeigth, heights, rigthtHigherV) {
+            let lengthToRH = 0;
+            for (let r = indexMinHeigth; r < heights.length; r++) {
+                if (heights[r] > heights[indexMinHeigth]) {
+                    rigthtHigherV = heights[r];
+
+                    if (r - indexMinHeigth > 1)
+                        lengthToRH = r - indexMinHeigth - 1
+
+                    break;
+                }
+
+
+            }
+            return [rigthtHigherV, lengthToRH]
+        }
+
+        function containedSpace(indexMinHeigth,lengthToRH,heights){
+                    for (let waterIdx = indexMinHeigth; waterIdx <= indexMinHeigth + lengthToRH; waterIdx++) {
+                        heights[waterIdx]++
+                    }
+                    return heights;
+                }
+
+        ///////////
+        function capturingRainwater(heights) {
+            let contained = 0;
+            let renderHigthForWhile = 0;
+            while (renderHigthForWhile <= getMaxOfArray(heights) + 1) {
+                // if (renderHigthForWhile == 0) {
+                //     console.log(`Высота начала проверки: ${renderHigthForWhile}, заполненность водой :${contained} Массив ${heights}`)
+                // }
+                // if (renderHigthForWhile == 1) {
+                //     console.log(`Высота начала проверки: ${renderHigthForWhile}, заполненность водой :${contained} Массив ${heights}`)
+                // }
+                // if(renderHigthForWhile==2){
+                //     console.log(`Высота начала проверки: ${renderHigthForWhile}, заполненность водой :${contained} Массив ${heights}`)
+                // }
+                // if(renderHigthForWhile==3){
+                //     console.log(`Высота начала проверки: ${renderHigthForWhile}, заполненность водой :${contained} Массив ${heights}`)
+                // }
+                // if(renderHigthForWhile==4){
+                //     console.log(`Высота начала проверки: ${renderHigthForWhile}, заполненность водой :${contained} Массив ${heights}`)
+                // }
+                // if(renderHigthForWhile==5){
+                //     console.log(`Высота начала проверки: ${renderHigthForWhile}, заполненность водой :${contained} Массив ${heights}`)
+                // }
+                let minHeight = getMinOfArray(heights)
+                let indexMinHeigth = heights.indexOf(minHeight)
+
+                if (minHeight > renderHigthForWhile) {
+                    renderHigthForWhile++
+                    continue;
+                }
+
+                let leftHigherV = -1;
+                let lengthToLH = 0;
+                let rigthtHigherV = -1;
+                let lengthToRH = 0;
+                ////цыклами находим первые значения которые выше чем мин значение
+
+                let [zzz, xxx] = findLeftHigherV(indexMinHeigth, heights, leftHigherV)////РАБОТАЕТ ПРАВИЛЬНО
+                leftHigherV = zzz; lengthToLH = xxx;
+
+                let [zzzz, xxxx] = findRightHigherV(indexMinHeigth, heights, rigthtHigherV)////РАБОТАЕТ ПРАВИЛЬНО
+                rigthtHigherV = zzzz; lengthToRH = xxxx; //разворачиваем результаты
+
+                if (leftHigherV == -1 || rigthtHigherV == -1) {//если нету высот по сторонам увеличиваем высоту проверки
+                    renderHigthForWhile++
+                    heights = containedSpace(indexMinHeigth,lengthToRH,heights)
+                    continue
+                }
+                if (leftHigherV != -1 && rigthtHigherV != -1) { //если мы нашли высоты значение слева и справа
+                    contained += lengthToRH + lengthToLH; ///считаем пространство для воды
+                    //заполняем водой
+                    heights = containedSpace(indexMinHeigth,lengthToRH,heights)
+
+                }
+
+            }
+            return contained
+        }
+
+const testArray = [4, 2, 1, 3, 0, 1, 2];
+console.log(capturingRainwater(testArray));
+
+
+
+    </script>
+</body>
+
+</html>
